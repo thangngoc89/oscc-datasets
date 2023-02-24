@@ -1,0 +1,133 @@
+# Install parallel
+# Method 1
+#First, download lastet parallel: https://www.gnu.org/software/parallel/ into cd (thu muc goc)
+# Untar
+tar -xvjf parallel*
+cd parallel-20220822
+./configure
+make
+sudo make install
+
+# Method 2
+#1. Install MacPorts: https://www.macports.org/install.php
+sudo port -v selfupdate
+#If sudo: port: command not found: https://stackoverflow.com/questions/9694395/sudo-port-command-not-found
+#2. 
+sudo port install parallel
+
+
+
+
+
+
+# Install cutadapt
+python3 -m pip install --user --upgrade cutadapt
+~/.local/bin/cutadapt --version
+
+# Install Trim Galore
+curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.6.tar.gz -o trim_galore.tar.gz
+tar xvzf trim_galore.tar.gz
+
+# Run Trim Galore
+~/TrimGalore-0.6.6/trim_galore --path_to_cutadapt ~/.local/bin/cutadapt
+
+# Install FastQC
+#Download: https://www.bioinformatics.babraham.ac.uk/projects/download.html#fastqc
+
+copy fastqc into ~/TrimGalore-0.6.6/trim_galore
+
+# Run TrimGalore
+~/TrimGalore-0.6.6/trim_galore --path_to_cutadapt ~/TrimGalore-0.6.6/cutadapt
+
+# Example
+~/TrimGalore-0.6.6/trim_galore --path_to_cutadapt ~/.local/bin/cutadapt --illumina --paired ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/1-DHYD-10_S8530-S8730_R1.fastq.gz ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/1-DHYD-10_S8530-S8730_R2.fastq.gz -o ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/Trimmed
+
+# Run TrimGalore parallel
+parallel --xapply ~/TrimGalore-0.6.6/trim_galore --path_to_cutadapt ~/.local/bin/cutadapt --illumina --paired -o ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/Trimmed ::: ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/*_R1.fastq.gz ::: ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/*_R2.fastq.gz
+
+
+
+
+
+
+# Install h5py
+pip install h5py
+import h5py
+h5py.run_tests()
+
+# Install hdf5
+brew install hdf5
+
+
+
+
+# Install kallisto
+# Method 1
+# Install Homebrew (already): ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install kallisto
+brew install autoconf@2.69
+brew install automake
+brew install autoconf
+
+
+
+
+# In case to recompile with HDF5 support (recommended)
+# Method 2
+brew remove kallisto # remove the old one first
+brew install cmake
+brew install autoconf
+brew install hdf5
+brew install automake
+brew install autoconf@2.69
+git clone https://github.com/pachterlab/kallisto.git
+cd kallisto
+cd ext/htslib # (note, this only needs to be done once, not when you recompile)
+autoheader
+autoconf
+cd ../..
+mkdir build
+cd build
+cmake .. -DUSE_HDF5=ON
+make
+make install
+
+
+
+
+# Use kallisto
+#test
+cd
+cd kallisto/test
+kallisto index -i transcripts.idx transcripts.fasta.gz
+kallisto quant -i transcripts.idx -o output -b 100 <(gzcat reads_1.fastq.gz) <(gzcat reads_2.fastq.gz)
+
+
+
+
+
+# To build the human transcriptome index, first download the transcriptome (newest)
+curl -O ftp://ftp.ensembl.org/pub/release-107/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+
+#Next, build an index type
+kallisto index -i ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/Index/Homo_sapiens.GRCh38.cdna.all.release-107_k31.idx ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/Index/Homo_sapiens.GRCh38.cdna.all.fa.gz
+
+
+
+
+
+
+# Run Kallisto
+kallisto quant -i ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/Index/Homo_sapiens.GRCh38.cdna.all.release-107_k31.idx -o ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Kallisto_output -b 100 <(gzcat ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/Trimmed/1-DHYD-10_S8530-S8730_R1_val_1.fq.gz) <(gzcat ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/Trimmed/1-DHYD-10_S8530-S8730_R2_val_2.fq.gz)
+
+
+
+
+# Run kallisto bash loop
+brew install bash
+
+# Run kallisto bash loop (files 1 to 2)
+for i in {1..2}; do time kallisto quant -i ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/Index/Homo_sapiens.GRCh38.cdna.all.release-107_k31.idx -b 100 <(gzcat ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/Trimmed/${i}-*_R1_val_1.fq.gz) <(gzcat ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Data/Trimmed/${i}-*_R2_val_2.fq.gz) -o ~/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/02.11.2022/Kallisto_output/Demo${i}; done
+
+
+

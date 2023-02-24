@@ -1,0 +1,33 @@
+producer_class	xtools.gsea.Gsea
+producer_timestamp	1676982801407
+param	zip_report	false
+param	num	100
+param	scoring_scheme	weighted
+param	norm	meandiv
+param	out	/Users/Nam-hay-quen/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/R_output/GSEA
+param	mode	Max_probe
+param	include_only_symbols	true
+param	set_max	500
+param	gmx	ftp.broadinstitute.org://pub/gsea/msigdb/human/gene_sets/c2.cp.biocarta.v2022.1.Hs.symbols.gmt,/Users/Nam-hay-quen/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/R_output/GSEA/Genesets/c6.all.v2022.1.Hs.symbols.gmt.txt
+param	plot_top_x	20
+param	nperm	1000
+param	order	descending
+param	rnd_seed	timestamp
+param	rpt_label	2clusters
+param	set_min	15
+param	res	/Users/Nam-hay-quen/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/R_output/GSEA/Expression/norm_counts_forGSEA.txt
+param	create_svgs	false
+param	cls	/Users/Nam-hay-quen/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/R_output/GSEA/Phenotype.cls#2_versus_1
+param	sort	real
+param	create_gcts	false
+param	help	false
+param	save_rnd_lists	false
+param	median	false
+param	metric	Signal2Noise
+param	make_sets	true
+param	rnd_type	no_balance
+param	gui	false
+param	permute	phenotype
+param	collapse	No_Collapse
+
+file	/Users/Nam-hay-quen/Library/CloudStorage/OneDrive-UMP/NCKH_Nhatnam/11.Data/R_output/GSEA/2clusters.Gsea.1676982801407/index.html
